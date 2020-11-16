@@ -12,6 +12,9 @@ class Ciclo:
     def getProducoes(self):
         return self.earley_producoes
 
+    def getQuantidadeProducoes(self):
+        return len(self.earley_producoes)
+
     def getMarcados(self):
         marcados = []
 
@@ -20,9 +23,21 @@ class Ciclo:
 
         return marcados
 
-    def print(self):
-        print("Ciclo atual:", self.nro_ciclo)
+    def producaoJaExiste(self, producao_verificar):
+        if self.earley_producoes == []:
+            return False
+        
+        verificacao = True
+        for eproducao in self.earley_producoes:
+            verificacao = verificacao and eproducao.comparaProducoes(producao_verificar)
 
-        print("Produções: ")
+        return verificacao
+
+
+    def print(self):
+        print("-----------------------------")
+        print("Ciclo atual:", self.nro_ciclo)
+        print("_____________________________")
+
         for eproducoes in self.earley_producoes:
             print(eproducoes.toString())

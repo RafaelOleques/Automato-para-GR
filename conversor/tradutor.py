@@ -62,14 +62,14 @@ class Tradutor_Aut_para_GR:
 
         simbolo_inicial = 'S'
 
-        variaveis = ['S', ]
+        variaveis = [simbolo_inicial, ]
         variaveis.extend(estados)
 
         terminais = alfabeto
 
         id = 0 
         
-        producoes = [Producao(id, simbolo_inicial, inicial),]
+        producoes = [Producao(id, simbolo_inicial, [inicial, '']),]
 
         for transicao in transicoes:
             id += 1
