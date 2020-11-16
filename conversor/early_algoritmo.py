@@ -8,26 +8,31 @@ class Earley:
         self.ciclos = []
         self.gramatica = gramatica
         self.palavra = palavra
+        self.ULTIMO_INDICE = -1
+        self.PRODUCAO = 0
+        self.NRO_SIMBOLO = 1
 
     def get_lista_proximo_simbolo(self, producoes):
         lista_prox = []
+        PRIMEIRO_SIMBOLO = 0
 
         for producao in producoes:
-            lista_prox.append(producao[0].direita[0])
+            lista_prox.append(producao[self.PRODUCAO].direita[PRIMEIRO_SIMBOLO])
         
         return lista_prox
 
     def add_ciclo(self, producoes, simbolo, nro_ciclo):
+        INVALIDO = ''
         novas_producoes = []
-        i = 0
-        if simbolo in self.gramatica.variaveis and simbolo != '':
+
+        if simbolo in self.gramatica.variaveis and simbolo != INVALIDO:
             for producao in producoes:
                 if producao.esquerda == simbolo:
-                    if not self.ciclos[-1].producaoJaExiste(producao):
+                    if not self.ciclos[self.ULTIMO_INDICE].producaoJaExiste(producao):
                         novas_producoes.append((producao, nro_ciclo))
 
         for producao in novas_producoes:
-            self.ciclos[-1].add_producao(producao[0], producao[1])
+            self.ciclos[self.ULTIMO_INDICE].add_producao(producao[self.PRODUCAO], producao[self.NRO_SIMBOLO])
 
         return novas_producoes
 
@@ -62,9 +67,9 @@ class Earley:
         #Produções a partir de S        
         proximos_simbolos = self.get_lista_proximo_simbolo(novas_producoes)
 
-        self.predict(producoes, 0, proximos_simbolos)
+        self.predict(producoes, nro_ciclo, proximos_simbolos)
         
-        self.ciclos[0].print()
+        self.ciclos[nro_ciclo].print()
 
     def etapa_2(self):
         pass
