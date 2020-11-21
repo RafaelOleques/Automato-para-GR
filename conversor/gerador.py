@@ -8,8 +8,8 @@ class Gerador:
         gramatica = tradutor.traduz()
         #gramatica.print()
         earley = Earley(gramatica, palavra, print=True)
-        earley.etapa_1()
+        earley.executa()
 
 if __name__ == "__main__":   
     entrada = './Automato_Entrada.txt'
-    gerador = Gerador(entrada, 'XVIII')
+    gerador = Gerador(entrada, 'MMCXVIII')

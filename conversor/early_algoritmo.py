@@ -18,14 +18,16 @@ class Earley:
         self.ID = 1
 
         #Mensagens
-        self.mensagem_erro = "A palavra '%s' não pertente a gramática!" % palavra
-        self.mensagem_erro_vazio = "A palavra vazia não pertente a gramática!"
+        self.mensagem_erro = "Palavra não pertence à linguagem"
         self.mensagem_aceita = "A palavra '%s' pertente a gramática!" % palavra
         self.print = print
 
+    def executa(self):
+        self.etapa_1()
+
     def etapa_1(self):
         if self.palavra == '':
-            print(self.mensagem_erro_vazio)
+            print(self.mensagem_erro)
             return False
 
         nro_ciclo = 0
@@ -55,6 +57,7 @@ class Earley:
     def etapa_2(self, nro_ciclo):
         #Encerra a recursão se já passou por toda a palavra
         if(nro_ciclo > self.TAMANHO_PALAVRA):
+            print(self.mensagem_aceita)
             return True
 
         terminal_atual = self.palavra[nro_ciclo-1]

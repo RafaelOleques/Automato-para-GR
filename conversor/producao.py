@@ -6,7 +6,7 @@ class Producao:
 
     def toString(self):
         string = "ID: %s |" % self.id 
-        string = str(self.esquerda)+"->"
+        string += str(self.esquerda)+"->"
 
         string += ''.join(map(str, self.direita))
         

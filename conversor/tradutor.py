@@ -25,27 +25,28 @@ class Tradutor_Aut_para_GR:
         producoes = [Producao(id, simbolo_inicial, direita),]
 
         controle = []
-
+        
         #Produções dos demais símbolos
         for transicao in transicoes:
             id += 1
-
+            
+            esquerda = transicao.estado
             direita = [transicao.simbolo, transicao.prox_simbolo]
-            producoes.append(Producao(id, transicao.estado, direita))
-            controle.append(transicao.estado+''.join(map(str, direita)))
-
+            producoes.append(Producao(id, esquerda, direita))
+            controle.append(transicao.estado+transicao.simbolo+transicao.prox_simbolo)
+            
             #Como muitos estados são terminais e possuem transição
             #então, adiciona-se a producao em que acaba nele e não é feita transição
 
-            if(transicao.prox_simbolo in finais):
-                direita = [transicao.simbolo, transicao.prox_simbolo]
-                if transicao.estado+''.join(map(str, direita)) not in controle:
-                    producoes.append(Producao(id, transicao.estado, direita))
-                    controle.append(transicao.estado+''.join(map(str, direita)))
-
-            variaveis.append(transicao.estado)
+            if(transicao.simbolo in alfabeto and transicao.prox_simbolo in finais):
+                id += 1
+                producoes.append(Producao(id, transicao.estado, transicao.simbolo))
+            
+            if transicao.estado not in variaveis:
+                variaveis.append(transicao.estado)
         
         #Cria a gramática
+        
         gramatica = Gramatica(variaveis, terminais, producoes, simbolo_inicial)    
 
         return gramatica 

@@ -14,4 +14,7 @@ class Transicao:
         self.simbolo = forma_transicao[SIMBOLO]
         self.prox_simbolo = forma_transicao[PROX]
 
+    def toString(self):
+        return (self.estado + " " + self.simbolo + " " + self.prox_simbolo)
+
     
