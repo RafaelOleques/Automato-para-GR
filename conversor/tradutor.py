@@ -31,6 +31,12 @@ class Tradutor_Aut_para_GR:
             direita = [transicao.simbolo, transicao.prox_simbolo]
             producoes.append(Producao(id, transicao.estado, direita))
 
+            #Como muitos estados são terminais e possuem transição
+            #então, adiciona-se a producao em que acaba nele e não é feita transição
+            if(transicao.prox_simbolo in finais):
+                direita = [transicao.simbolo, ]
+                producoes.append(Producao(id, transicao.estado, direita))
+
             variaveis.append(transicao.estado)
         
         #Cria a gramática

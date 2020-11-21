@@ -18,6 +18,7 @@ class Earley:
         #Mensagens
         self.mensagem_erro = "A palavra '%s' não pertente a gramática!" % palavra
         self.mensagem_erro_vazio = "A palavra vazia não pertente a gramática!"
+        self.mensagem_aceita = "A palavra '%s' pertente a gramática!" % palavra
 
     def etapa_1(self):
         if self.palavra == '':
@@ -48,33 +49,30 @@ class Earley:
 
     def etapa_2(self, nro_ciclo):
         #Encerra a recursão se já passou por toda a palavra
-        try:
-            if(nro_ciclo > self.TAMANHO_PALAVRA):
-                return True
+        if(nro_ciclo > self.TAMANHO_PALAVRA):
+            return True
 
-            terminal_atual = self.palavra[nro_ciclo-1]
+        terminal_atual = self.palavra[nro_ciclo-1]
 
-            #Incializa o cliclo atual
-            self.ciclos.append(Ciclo(nro_ciclo))
+        #Incializa o cliclo atual
+        self.ciclos.append(Ciclo(nro_ciclo))
 
-            #Scan
-            simbolos = self.scan(nro_ciclo, terminal_atual)
+        #Scan
+        simbolos = self.scan(nro_ciclo, terminal_atual)
 
-            #Predict
-            producoes = self.gramatica.producoes
-            self.predict(producoes, nro_ciclo, simbolos)
+        #Predict
+        producoes = self.gramatica.producoes
+        self.predict(producoes, nro_ciclo, simbolos)
 
-            if(self.ciclos[nro_ciclo].getQuantidadeProducoes() == 0):
-                print(self.mensagem_erro)
-                return False
-
-            self.ciclos[nro_ciclo].print()
-            
-            #Complete
-
-            self.etapa_2(nro_ciclo+1)
-        except:
+        if(self.ciclos[nro_ciclo].getQuantidadeProducoes() == 0):
             print(self.mensagem_erro)
+            return False
+
+        self.ciclos[nro_ciclo].print()
+        
+        #Complete
+
+        self.etapa_2(nro_ciclo+1)
 
 
     def etapa_3(self):
@@ -85,6 +83,9 @@ class Earley:
 
         for eproducao in self.ciclos[nro_ciclo-1].earley_producoes:
             marcador = eproducao.posicao_marcador
+            if marcador >= eproducao.fim:
+                continue
+
             posicao = eproducao.producao.direita[marcador]
 
             if posicao == terminal_atual:

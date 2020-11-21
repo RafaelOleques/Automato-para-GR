@@ -12,4 +12,4 @@ class Gerador:
 
 if __name__ == "__main__":   
     entrada = './Automato_Entrada.txt'
-    gerador = Gerador(entrada, 'I')
+    gerador = Gerador(entrada, 'CCCXCIX')
