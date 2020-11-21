@@ -5,6 +5,7 @@ class Producao:
         self.direita = direita
 
     def toString(self):
+        string = "ID: %s |" % self.id 
         string = str(self.esquerda)+"->"
 
         string += ''.join(map(str, self.direita))

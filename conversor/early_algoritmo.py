@@ -4,7 +4,7 @@ from earley_producao import Earley_producao
 from producao import Producao
 
 class Earley:
-    def __init__(self, gramatica, palavra):
+    def __init__(self, gramatica, palavra, print=False):
         self.ciclos = []
         self.gramatica = gramatica
         self.palavra = palavra
@@ -14,11 +14,14 @@ class Earley:
         self.PRODUCAO = 0
         self.NRO_SIMBOLO = 1
         self.TAMANHO_PALAVRA = len(palavra)
+        self.SIMBOLO = 0
+        self.ID = 1
 
         #Mensagens
         self.mensagem_erro = "A palavra '%s' não pertente a gramática!" % palavra
         self.mensagem_erro_vazio = "A palavra vazia não pertente a gramática!"
         self.mensagem_aceita = "A palavra '%s' pertente a gramática!" % palavra
+        self.print = print
 
     def etapa_1(self):
         if self.palavra == '':
@@ -35,15 +38,17 @@ class Earley:
         #Produções de S
         producoes = self.gramatica.producoes
         simboloInicial = self.gramatica.simboloInicial
+
+        simbolo = [simboloInicial, None]
         
-        novas_producoes.extend(self.add_ciclo(producoes, simboloInicial, nro_ciclo))
-        
+        novas_producoes.extend(self.add_ciclo(producoes, simbolo, nro_ciclo))
+
         #Produções a partir de S        
         proximos_simbolos = self.get_lista_proximo_simbolo(novas_producoes)
 
         self.predict(producoes, nro_ciclo, proximos_simbolos)
 
-        self.ciclos[nro_ciclo].print()
+        self.ciclos[nro_ciclo].print(self.print)
 
         self.etapa_2(nro_ciclo+1)
 
@@ -68,7 +73,7 @@ class Earley:
             print(self.mensagem_erro)
             return False
 
-        self.ciclos[nro_ciclo].print()
+        self.ciclos[nro_ciclo].print(self.print)
         
         #Complete
 
@@ -89,14 +94,14 @@ class Earley:
             posicao = eproducao.producao.direita[marcador]
 
             if posicao == terminal_atual:
-                nova_eproducao = Earley_producao(eproducao.producao, eproducao.nro_ciclo_adicionado)
+                nova_eproducao = Earley_producao(eproducao.producao, eproducao.nro_ciclo_adicionado, eproducao.caminho)
                 nova_eproducao.posicao_marcador += 1
                 marcador = nova_eproducao.posicao_marcador
                 
                 self.ciclos[nro_ciclo].add_producao(nova_eproducao)
 
                 if marcador != eproducao.fim:
-                    novos_simbolos.append(eproducao.producao.direita[marcador])
+                    novos_simbolos.append([eproducao.producao.direita[marcador], eproducao.producao.id])
 
         return novos_simbolos
 
@@ -107,7 +112,7 @@ class Earley:
 
         #Verifica se há variáveis dentre os símbolos recebidos
         for simbolo in simbolos:
-            if simbolo in self.gramatica.variaveis:
+            if simbolo[self.SIMBOLO] in self.gramatica.variaveis:
                 novas_producoes_analisar.extend(self.add_ciclo(producoes, simbolo, nro_ciclo))
                 analisar_prox_simbolos = True
 
@@ -140,19 +145,20 @@ class Earley:
                 self.ciclos[nro_ciclo].add_producao(eproducao)
                 novos_simbolos.append(eproducao.producao.direita[marcador])
 
-
+    
     def add_ciclo(self, producoes, simbolo, nro_ciclo):
         INVALIDO = ''
         novas_producoes = []
 
-        if simbolo in self.gramatica.variaveis and simbolo != INVALIDO:
+        if simbolo[self.SIMBOLO] in self.gramatica.variaveis and simbolo[self.SIMBOLO] != INVALIDO:
             for producao in producoes:
-                if producao.esquerda == simbolo:
+                if producao.esquerda == simbolo[self.SIMBOLO]:
                     if not self.ciclos[self.ULTIMO_CICLO].producaoJaExiste(producao):
-                        novas_producoes.append(Earley_producao(producao, nro_ciclo))
+                        novas_producoes.append(Earley_producao(producao, nro_ciclo, simbolo[self.ID]))
 
         for eproducao in novas_producoes:
             self.ciclos[self.ULTIMO_CICLO].add_producao(eproducao)
+
 
         return novas_producoes
 
@@ -163,7 +169,7 @@ class Earley:
         PRIMEIRO_SIMBOLO = 0
 
         for eproducao in eproducoes:
-            lista_prox.append(eproducao.producao.direita[PRIMEIRO_SIMBOLO])
+            lista_prox.append([eproducao.producao.direita[PRIMEIRO_SIMBOLO], eproducao.producao.id])
         
         return lista_prox
 

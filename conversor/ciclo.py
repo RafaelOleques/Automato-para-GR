@@ -34,10 +34,11 @@ class Ciclo:
         return verificacao
 
 
-    def print(self):
-        print("-----------------------------")
-        print("Ciclo atual:", self.nro_ciclo)
-        print("_____________________________")
+    def print(self, mostra=False):
+        if mostra:
+            print("-----------------------------")
+            print("Ciclo atual:", self.nro_ciclo)
+            print("_____________________________")
 
-        for eproducoes in self.earley_producoes:
-            print(eproducoes.toString())
+            for eproducoes in self.earley_producoes:
+                print(eproducoes.toString())

@@ -1,13 +1,13 @@
 from producao import Producao 
 
 class Earley_producao:
-    def __init__(self, producao, nro_ciclo_adicionado):
+    def __init__(self, producao, nro_ciclo_adicionado, caminho):
         self.producao = producao
         self.posicao_marcador = 0
         self.fim = len(producao.direita)
 
         self.nro_ciclo_adicionado = nro_ciclo_adicionado
-        self.lista_complete = []
+        self.caminho = caminho
 
     def avanca_marcador(self):
         self.posicao_marcador += 1
@@ -26,6 +26,7 @@ class Earley_producao:
     def toString(self):
         string =  "(Ciclo: "+str(self.nro_ciclo_adicionado)+"), "
         string += "(Marcador: "+str(self.posicao_marcador)+"), "
-        string += "("+self.producao.toString()+")"
+        string += "("+self.producao.toString()+"), "
+        string += "(Caminho: %s)" % self.caminho
 
         return string

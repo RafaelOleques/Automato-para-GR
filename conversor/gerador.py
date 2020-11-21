@@ -7,9 +7,9 @@ class Gerador:
         tradutor = Tradutor_Aut_para_GR(entrada)
         gramatica = tradutor.traduz()
         #gramatica.print()
-        earley = Earley(gramatica, palavra)
+        earley = Earley(gramatica, palavra, print=True)
         earley.etapa_1()
 
 if __name__ == "__main__":   
     entrada = './Automato_Entrada.txt'
-    gerador = Gerador(entrada, 'CCCXCIX')
+    gerador = Gerador(entrada, 'XVIII')

@@ -24,18 +24,24 @@ class Tradutor_Aut_para_GR:
         direita = [inicial, '']
         producoes = [Producao(id, simbolo_inicial, direita),]
 
+        controle = []
+
         #Produções dos demais símbolos
         for transicao in transicoes:
             id += 1
 
             direita = [transicao.simbolo, transicao.prox_simbolo]
             producoes.append(Producao(id, transicao.estado, direita))
+            controle.append(transicao.estado+''.join(map(str, direita)))
 
             #Como muitos estados são terminais e possuem transição
             #então, adiciona-se a producao em que acaba nele e não é feita transição
+
             if(transicao.prox_simbolo in finais):
-                direita = [transicao.simbolo, ]
-                producoes.append(Producao(id, transicao.estado, direita))
+                direita = [transicao.simbolo, transicao.prox_simbolo]
+                if transicao.estado+''.join(map(str, direita)) not in controle:
+                    producoes.append(Producao(id, transicao.estado, direita))
+                    controle.append(transicao.estado+''.join(map(str, direita)))
 
             variaveis.append(transicao.estado)
         
