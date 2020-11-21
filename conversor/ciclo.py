@@ -6,8 +6,8 @@ class Ciclo:
         self.earley_producoes = []
         self.nro_ciclo = nro_ciclo
 
-    def add_producao(self, producao, nro_ciclo):
-        self.earley_producoes.append(Earley_producao(producao, nro_ciclo))
+    def add_producao(self, earley_producao):
+        self.earley_producoes.append(earley_producao)
 
     def getProducoes(self):
         return self.earley_producoes

@@ -4,7 +4,10 @@ class Earley_producao:
     def __init__(self, producao, nro_ciclo_adicionado):
         self.producao = producao
         self.posicao_marcador = 0
+        self.fim = len(producao.direita)
+
         self.nro_ciclo_adicionado = nro_ciclo_adicionado
+        self.lista_complete = []
 
     def avanca_marcador(self):
         self.posicao_marcador += 1
