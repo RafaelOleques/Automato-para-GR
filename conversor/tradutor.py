@@ -37,7 +37,6 @@ class Tradutor_Aut_para_GR:
             
             #Como muitos estados são terminais e possuem transição
             #então, adiciona-se a producao em que acaba nele e não é feita transição
-
             if(transicao.simbolo in alfabeto and transicao.prox_simbolo in finais):
                 id += 1
                 producoes.append(Producao(id, transicao.estado, transicao.simbolo))
