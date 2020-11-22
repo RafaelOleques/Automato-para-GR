@@ -25,6 +25,7 @@ class Tradutor_Aut_para_GR:
         producoes = [Producao(id, simbolo_inicial, direita),]
 
         controle = []
+        controle_determinismo = []
         
         #Produções dos demais símbolos
         for transicao in transicoes:
@@ -32,6 +33,12 @@ class Tradutor_Aut_para_GR:
             
             esquerda = transicao.estado
             direita = [transicao.simbolo, transicao.prox_simbolo]
+            
+            if transicao.estado+transicao.simbolo in controle_determinismo:
+                return false
+            
+            controle_determinismo.append(transicao.estado+transicao.simbolo)
+
             producoes.append(Producao(id, esquerda, direita))
             controle.append(transicao.estado+transicao.simbolo+transicao.prox_simbolo)
             
@@ -50,7 +57,7 @@ class Tradutor_Aut_para_GR:
 
         return gramatica 
 
-        #Separa os parâmetros da estrutura recebida
+    #Separa os parâmetros da estrutura recebida
     def separa_parametros_automato(self):
         ESTADOS = 0
         ALFABETO = 1

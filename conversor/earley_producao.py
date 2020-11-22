@@ -12,6 +12,7 @@ class Earley_producao:
     def avanca_marcador(self):
         self.posicao_marcador += 1
 
+    #Poisção onde está o marcador
     def marcado(self):
         return self.producao.direita[self.posicao_marcador]
 

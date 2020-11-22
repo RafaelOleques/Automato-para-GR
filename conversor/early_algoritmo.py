@@ -148,7 +148,7 @@ class Earley:
                 self.ciclos[nro_ciclo].add_producao(eproducao)
                 novos_simbolos.append(eproducao.producao.direita[marcador])
 
-    
+    #SImbolo é [string do simbolo, id do simbolo]
     def add_ciclo(self, producoes, simbolo, nro_ciclo):
         INVALIDO = ''
         novas_producoes = []
