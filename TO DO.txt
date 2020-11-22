@@ -1,0 +1,6 @@
+complete do passo 2
+etapa/passo 3 ver se no primeiro ciclo ver se tem uma produção que foi completada
+entrada
+entrada CSV
+-comentar otimizações e documentar
+-avisar que mudamos o automato de entrada, uma { estava no local errado
