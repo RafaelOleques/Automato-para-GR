@@ -1,14 +1,18 @@
 from gr import Gramatica 
 from producao import Producao 
 from transicao import Transicao
+from  tratamento_entrada import Tratamento_entrada
 
 class Tradutor_Aut_para_GR:
 
     def __init__(self, entrada):
-        self.texto_automato = open(entrada, 'r')
+        conversor_entrada = Tratamento_entrada(entrada, tipo="txt")
+        self.texto_automato  = conversor_entrada.get_entrada()
 
     #Fazer as producoes estarem em uma lista de producoes para mandar para a GR
     def traduz(self):
+        if self.texto_automato == None:
+            return None
         alfabeto, estados, transicoes, inicial, finais = self.separa_parametros_automato()
 
         simbolo_inicial = 'S'
@@ -35,7 +39,7 @@ class Tradutor_Aut_para_GR:
             direita = [transicao.simbolo, transicao.prox_simbolo]
             
             if transicao.estado+transicao.simbolo in controle_determinismo:
-                return false
+                return None
             
             controle_determinismo.append(transicao.estado+transicao.simbolo)
 
@@ -110,7 +114,3 @@ class Tradutor_Aut_para_GR:
             num_linha += 1
 
         return automato, transicoes
-
-
-
-    

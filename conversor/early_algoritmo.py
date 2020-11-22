@@ -4,26 +4,43 @@ from earley_producao import Earley_producao
 from producao import Producao
 
 class Earley:
-    def __init__(self, gramatica, palavra, print=False):
+    def __init__(self, gramatica, print=False):
         self.ciclos = []
         self.gramatica = gramatica
-        self.palavra = palavra
+        self.palavra = ""
 
         #Constantes
         self.ULTIMO_CICLO = -1
         self.PRODUCAO = 0
         self.NRO_SIMBOLO = 1
-        self.TAMANHO_PALAVRA = len(palavra)
         self.SIMBOLO = 0
         self.ID = 1
 
         #Mensagens
-        self.mensagem_erro = "Palavra não pertence à linguagem"
-        self.mensagem_aceita = "A palavra '%s' pertente a gramática!" % palavra
         self.print = print
 
-    def executa(self):
-        self.etapa_1()
+    def set_palavra(self, palavra):
+        self.mensagem_erro = "Palavra %s não pertence à linguagem" % palavra
+        self.mensagem_aceita = "A palavra '%s' pertente à gramática!" % palavra
+        self.TAMANHO_PALAVRA = len(palavra)
+        self.palavra = palavra
+
+    def executa(self, palavra):
+        if type(palavra) is list:
+            self._executa_lista(palavra)
+        else:
+            self._executa_palavra_unica(palavra)
+            
+    
+    def _executa_palavra_unica(self, palavra):
+            self.set_palavra( palavra)
+            self.ciclos = []
+            self.etapa_1()
+    
+    def _executa_lista(self, palavras):
+        for palavra in palavras:
+            self._executa_palavra_unica(palavra)
+       
 
     def etapa_1(self):
         if self.palavra == '':

@@ -1,43 +1,32 @@
 from tradutor import Tradutor_Aut_para_GR
 from gr import Gramatica
 from early_algoritmo import Earley
+from tratamento_entrada import Tratamento_entrada
 
 class Gerador:
     def __init__(self):
 
         automato = input("Digite o caminho para o automato: ")
 
-        tipo = input("Para a entrada: 0 para arquivo / 1 para texto: ")
-        informacao = input("Digite a entrada: ")
-
-        entrada = (tipo, informacao)
-
-        palavras = self.trata_entrada(entrada)
+        entrada = input("Digite a entrada ou o caminho para um csv: ")
 
         tradutor = Tradutor_Aut_para_GR(automato)
         gramatica = tradutor.traduz()
 
-        if gramatica == False:
-            print("Entrada inválida!")
+        if gramatica is None:
+            print("Autômato inválido!")
+            return None
 
-        #gramatica.print()
+        verificador = Earley(gramatica)
 
-        for palavra in palavras:
-            earley = Earley(gramatica, entrada, print=True)
-            earley.executa()
+        tratamento = Tratamento_entrada(entrada)
+        lista_palavras = tratamento.get_entrada()
 
-    def trata_entrada(self, entrada):
-        TIPO = 0
-        INFORMACAO = 1
-        ARQUIVO = 0
+        if lista_palavras is None:
+            print("CSV inválido")
+            return None
 
-        lista_palavras = []
-
-        if(entrada[TIPO] == ARQUIVO):
-            #tratamento
-            pass
-        else:
-            return [entrada[INFORMACAO],]
+        verificador.executa(lista_palavras)
 
 if __name__ == "__main__":   
     #entrada = './Automato_Entrada.txt'
