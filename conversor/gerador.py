@@ -17,7 +17,7 @@ class Gerador:
             print("Autômato inválido!")
             return None
 
-        verificador = Earley(gramatica)
+        verificador = Earley(gramatica, print=False)
 
         tratamento = Tratamento_entrada(entrada)
         lista_palavras = tratamento.get_entrada()

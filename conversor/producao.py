@@ -11,3 +11,10 @@ class Producao:
         string += ''.join(map(str, self.direita))
         
         return string
+    
+    def toString_sem_id(self):
+        string = str(self.esquerda)+"->"
+
+        string += ''.join(map(str, self.direita))
+        
+        return string

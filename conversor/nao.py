@@ -8,11 +8,6 @@ class Earley:
         self.ciclos = []
         self.gramatica = gramatica
         self.palavra = ""
-        self.retorno = 0
-        self.lista_producoes = []
-        self.lista_aceita = []
-        self.lista_rejeita = []
-        self.mostra_producoes = True
 
         #Constantes
         self.ULTIMO_CICLO = -1
@@ -25,8 +20,8 @@ class Earley:
         self.print = print
 
     def set_palavra(self, palavra):
-        self.mensagem_erro = "Palavra não pertence à linguagem"
-        self.mensagem_aceita = "A palavra pertente à linguagem"
+        self.mensagem_erro = "Palavra %s não pertence à linguagem" % palavra
+        self.mensagem_aceita = "A palavra '%s' pertente à gramática!" % palavra
         self.TAMANHO_PALAVRA = len(palavra)
         self.palavra = palavra
 
@@ -43,27 +38,13 @@ class Earley:
             self.etapa_1()
     
     def _executa_lista(self, palavras):
-        self.mostra_producoes = False
         for palavra in palavras:
             self._executa_palavra_unica(palavra)
-
-        print("\nACEITA:")
-        for aceita in self.lista_aceita:
-            print(aceita)
-
-        print("\nREJEITA:")
-        if self.lista_rejeita != []:
-            for rejeita in self.lista_rejeita:
-                print(rejeita)
-        else:
-            print("Nenhuma palavra foi rejeitada")
        
 
     def etapa_1(self):
         if self.palavra == '':
-            if self.mostra_producoes:
-                print(self.mensagem_erro)
-            self.lista_rejeita.append(self.palavra)
+            print(self.mensagem_erro)
             return False
 
         nro_ciclo = 0
@@ -93,10 +74,8 @@ class Earley:
     def etapa_2(self, nro_ciclo):
         #Encerra a recursão se já passou por toda a palavra
         if(nro_ciclo > self.TAMANHO_PALAVRA):
+            print(self.mensagem_aceita)
             self.etapa_3()
-            if self.mostra_producoes:
-                for passos in self.lista_producoes:
-                    print(passos)
             return True
 
         terminal_atual = self.palavra[nro_ciclo-1]
@@ -112,9 +91,7 @@ class Earley:
         self.predict(producoes, nro_ciclo, simbolos)
 
         if(self.ciclos[nro_ciclo].getQuantidadeProducoes() == 0):
-            if self.mostra_producoes:
-                print(self.mensagem_erro)
-            self.lista_rejeita.append(self.palavra)
+            print(self.mensagem_erro)
             return False
         
         #Complete
@@ -125,16 +102,18 @@ class Earley:
         self.etapa_2(nro_ciclo+1)
 
 
-    def etapa_3(self):        
-        for eproducao in self.ciclos[self.ULTIMO_CICLO].earley_producoes:
+    def etapa_3(self):
+
+        print("=======================")
+        for ciclo in  self.ciclos:
+            ciclo.print(True)
+        
+        for eproducao in self.ciclos[0].earley_producoes:
             if eproducao.posicao_marcador == eproducao.fim and eproducao.producao.esquerda == self.gramatica.simboloInicial:
-                self.lista_aceita.append(self.palavra)
+                print("CONSEGUIMOS!")
                 return True
-        if self.mostra_producoes:
-            print(self.mensagem_erro)
         
-        self.lista_rejeita.append(self.palavra)
-        
+        print("Não conseguimos!")
         return False
 
 
@@ -179,54 +158,35 @@ class Earley:
             self.predict(producoes, nro_ciclo, proximos_simbolos)
     
     def complete(self, nro_ciclo):
-        self.lista_producoes = []
-        self.retorno = 0
-        #Passo por todas as producoes do ciclo e vejo se alguma chegou no final
         for eproducao in self.ciclos[nro_ciclo].earley_producoes:
             if eproducao.posicao_marcador == eproducao.fim:
-                
                 simbolo = eproducao.producao.esquerda
+
                 ciclo_anterior = nro_ciclo - 1
-                #Verifico se consigo avancar alguma producao de um ciclo anterior
+
                 self.avanca_producao_anterior(simbolo, nro_ciclo, ciclo_anterior)
 
-                if self.retorno == (self.TAMANHO_PALAVRA) and nro_ciclo == self.TAMANHO_PALAVRA:
-                    if eproducao.producao.esquerda != self.gramatica.simboloInicial:
-                        self.lista_producoes.append(eproducao.producao.toString_sem_id())
+                #self.ciclos[nro_ciclo].add_producao(eproducao, nro_ciclo)
+                #novos_simbolos.append(eproducao.producao.direita[marcador])
+    
 
     def avanca_producao_anterior(self, simbolo, nro_ciclo_atual, ciclo_anterior):
-        #Passo pro todas as producoes do ciclo anterior
-        val = 0
-        for i in range(0, (ciclo_anterior+1)):
-            for eproducao in self.ciclos[i].earley_producoes:
+        try:
+            for eproducao in self.ciclos[ciclo_anterior].earley_producoes:
                 marcador = eproducao.posicao_marcador
-
-                if(marcador >= eproducao.fim):
-                    continue
                 simbolo_marcado = eproducao.producao.direita[marcador]
 
-
                 if simbolo_marcado == simbolo:
-                    nova_eproducao = Earley_producao(eproducao.producao, eproducao.nro_ciclo_adicionado, eproducao.caminho)
-                    nova_eproducao.avanca_marcador()
-                    marcador = nova_eproducao.posicao_marcador
-                    
-                    self.ciclos[nro_ciclo_atual].add_producao(nova_eproducao)
-                    novo_simbolo = nova_eproducao.producao.esquerda
-                    novo_ciclo_anterior = ciclo_anterior - 1
-                    val = self.avanca_producao_anterior(novo_simbolo, nro_ciclo_atual, novo_ciclo_anterior)
-                    if val is None:
-                        val = 0
-                    #novos_simbolos.append(eproducao.producao.direita[marcador])
+                    if(eproducao.marcador != eproducao.fim):
+                        eproducao.avanca_marcador()
+                        marcador = eproducao.posicao_marcador 
+                        
+                        self.ciclos[nro_ciclo_atual].add_producao(eproducao)
 
-                    if (eproducao.producao.esquerda == 'S' or nro_ciclo_atual == self.TAMANHO_PALAVRA):
-                        self.lista_producoes.append(str(nova_eproducao.producao.toString_sem_id()))
-                        self.retorno += 1
-                        return 1
-
-        
-        return 0
-                    
+            if ciclo_anterior >= 0:
+                self.avanca_producao_anterior(simbolo, nro_ciclo_atual, ciclo_anterior-1)
+        except:
+            return None
 
     
 
