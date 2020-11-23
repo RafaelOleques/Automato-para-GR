@@ -1,6 +1,6 @@
 from tradutor import Tradutor_Aut_para_GR
 from gr import Gramatica
-from early_algoritmo import Earley
+from earley_algoritmo import Earley
 from tratamento_entrada import Tratamento_entrada
 
 class Gerador:
@@ -17,17 +17,15 @@ class Gerador:
             print("Autômato inválido!")
             return None
 
-        verificador = Earley(gramatica, print=False)
-
         tratamento = Tratamento_entrada(entrada)
         lista_palavras = tratamento.get_entrada()
 
         if lista_palavras is None:
             print("CSV inválido")
             return None
-
+        
+        verificador = Earley(gramatica, print=False)
         verificador.executa(lista_palavras)
 
 if __name__ == "__main__":   
-    #entrada = './Automato_Entrada.txt'
     gerador = Gerador()
