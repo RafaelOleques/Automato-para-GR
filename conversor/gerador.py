@@ -17,14 +17,15 @@ class Gerador:
             print("Autômato inválido!")
             return None
 
+        verificador = Earley(gramatica, print=False)
+
         tratamento = Tratamento_entrada(entrada)
         lista_palavras = tratamento.get_entrada()
 
         if lista_palavras is None:
             print("CSV inválido")
             return None
-        
-        verificador = Earley(gramatica, print=False)
+
         verificador.executa(lista_palavras)
 
 if __name__ == "__main__":   
