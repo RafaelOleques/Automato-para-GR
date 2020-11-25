@@ -13,3 +13,4 @@ por João Vitor Moreira Dias, Mateus Luiz Salvi e Rafael Oleques Nunes.
 **Observações:**
 - O autômato deve ser dado por meio de um arquivo .txt
 - Para ver os ciclos do algoritmo de Earley, escolha o parâmetro print do construtor da classe _Earley_ como True no gerador.py
+- Caso a linguagem aceite a palavra vazia, ela deve ser adicionada artificialmente como um símbolo no autômato
